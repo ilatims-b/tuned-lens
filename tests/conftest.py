@@ -56,13 +56,25 @@ def random_small_model(request: str) -> tr.PreTrainedModel:
         )
 
     elif small_model_name == "mockmodel/gemma-2-tiny":
-        config=tr.Gemma2Config(
+        config = tr.Gemma2Config(
             vocab_size=32_000,
             hidden_size=128,
+            intermediate_size=512,  # Usually 4x hidden_size for MLP
             num_hidden_layers=4,
             num_attention_heads=4,
             num_key_value_heads=4,
             head_dim=32,
+            # Gemma-2 specific parameters
+            hidden_activation="gelu_pytorch_tanh",  # Gemma-2 default
+            query_pre_attn_scalar=32,  # Scaled down from 256 (should match head_dim)
+            sliding_window=128,  # Scaled down from 4096
+            final_logit_softcapping=30.0,  # Gemma-2 default
+            attn_logit_softcapping=50.0,  # Gemma-2 default
+            attention_bias=False,  # Gemma-2 default
+            attention_dropout=0.0,  # Gemma-2 default
+            rms_norm_eps=1e-06,  # Gemma-2 default
+            rope_theta=10000.0,  # Gemma-2 default
+            max_position_embeddings=512,  # Scaled down from 8192
         )
     else:
         config = tr.AutoConfig.from_pretrained(small_model_name)
