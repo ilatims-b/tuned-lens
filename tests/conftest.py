@@ -28,6 +28,7 @@ def text_dataset(text_dataset_path: Path) -> Dataset:
         "facebook/opt-125m",
         "mockmodel/llama-tiny",
         "mockmodel/gemma-tiny",
+        "mockmodel/gemma-2-tiny",
         "gpt2",
     ],
 )
@@ -46,6 +47,16 @@ def random_small_model(request: str) -> tr.PreTrainedModel:
         )
     elif small_model_name == "mockmodel/gemma-tiny":
         config = tr.GemmaConfig(
+            vocab_size=32_000,
+            hidden_size=128,
+            num_hidden_layers=4,
+            num_attention_heads=4,
+            num_key_value_heads=4,
+            head_dim=32,
+        )
+
+    elif small_model_name == "mockmodel/gemma-2-tiny":
+        config=tr.Gemma2Config(
             vocab_size=32_000,
             hidden_size=128,
             num_hidden_layers=4,
